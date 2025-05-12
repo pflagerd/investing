@@ -12,6 +12,10 @@ body {
   background-color: #fafafa;
 }
 
+code {
+  font-size: 1.20em;
+}
+
 .container {
   width: 90%;
   max-width: 960px;
@@ -38,6 +42,10 @@ nav ul {
 nav a {
   color: #fff;
   text-decoration: none;
+}
+
+p {
+  margin-bottom: 0.5rem;
 }
 
 .hero {
