@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# if (there are no path-like arguments to ls)
+  if pwd | grep .issues; then
+    for directory in $(find . -maxdepth 1 -type d -regex '\./[0-9]+' -printf "%f\n"); do
+      if [ -e $directory/title.txt ]; then
+        printf '%5s %s\n' $directory "$(cat $directory/title.txt)"
+      else
+        echo "CANNOT FIND $directory/title.txt"
+      fi
+    done
+  else
+    # Pass through everything to /usr/bin/ls
+    /usr/bin/ls "$@"
+  fi
+# if
+# fi

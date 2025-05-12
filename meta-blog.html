@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Investing</title>
+  <title>Investing Meta-Blog</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header>
     <div class="container">
-      <h1>Investing Meta Blog</h1>
+      <h1>Investing Meta-Blog</h1>
       <p>Where I write down what I did, how I did it, what I want to do, how I want to do it, and any other information involved in and about the process of creation of the content of the Investing blog.</p>
       <br/>
       <!--nav>
@@ -27,17 +27,17 @@
     <section class="posts">
       <article class="post">
         <h3>Meta-Post about the youtube video entitled "Critical Analysis of <a href="https://www.youtube.com/watch?v=qtxkZcpnxcA" target="_blank">Government Report Reveals A LOT of People Are About to Lose Their Jobs</a>"</h3>
+        <p class="meta">This video is from <a href="">Eurodollar University</a>, a guy named Jeff Snyder who I find sometimes compelling and always interesting.</p>
         <p class="meta">May 12, 2025 by Daniel</p>
-        <hr>
-        <br>
-        <p>This video is from <a href="">Eurodollar University</a>, a guy named Jeff Snyder who I find sometimes compelling and always interesting.</p>
         <p>I've created a directory called <code>.issues/</code> in which I want to put code/data/everything pertaining to creating a repository-hosted equivalent to github.com which requires only a browser to access it, but which also has features for command-line (bash) access to the same content in plain text.</p>
-        <p>I created an issue in <a href="https://github.com/pflagerd/investing/issues/10" target="_blank">github.com/pflagerd/investing</a>.  As I add content to it, I'll want to add equivalent content (and tools) to <code>.issues/</code></p>
+        <p>I created an issue <a href="https://github.com/pflagerd/investing/issues/10" target="_blank">#10</a> in <a href="https://github.com/pflagerd/investing/issues" target="_blank">github.com/pflagerd/investing</a>.  As I add content to it, I'll want to add equivalent content (and tools) to <code>.issues/</code></p>
         <p>I added a css rule for <code>code</code> which defined the font-size to be 120% em - since all the code elements will appear within the &ltbody&gt element.  I used <code title="kde screen capture tool: kde-spectacle/oracular,now 24.05.2-1ubuntu1 amd64">spectacle</code>'s rectangle-capture to measure and compare the height of characters displayed herein. The code characters were visibly smaller than the body text characters until I made this change.</code></p>
         <p>I added a folder <code>.issues/10/</code> to contain the repository-hosted version of issue <a href="https://github.com/pflagerd/investing/issues/10" target="_blank">#10</a>.</p>
-        <p>I created an html fragment <code>.issues/10/title.html</code> containing the issue's title.  Unlike github.com titles, this title contains a hyperlink.  If everything is html, then we could have way more interesting features in the repository-hosted issue tracking system.</p>
+        <p>I created an html fragment <code>.issues/10/title.html</code> containing the issue's title.  Unlike github.com titles, this title contains a hyperlink.  If everything is html, then we could have way more interesting features in the repository-hosted issue-tracking system.</p>
         <p>I put a screenshot of a youtube.com summary in <code>.issues/10/images/Screenshot_20250512_101928.png</code></p>
-        <p>I then adjusted <code>styles.css</code> to make the <code>code</code> style be 1.16em instead of 1.20em, since it looks better in the paragraph immediately above this one. The original size made S<code>.issues/10/images/Screenshot_20250512_101928.png</code> look too big relative to body text.</p>
+        <p>I then adjusted <code>styles.css</code> to make the <code>code</code> style be 1.16em instead of 1.20em, since it looks better in the paragraph immediately above this one. The original size made S<code>.issues/10/images/Screenshot_20250512_101928.png</code> look too big relative to body text.  But after fiddling with that and remeasuring, I put it back to 1.20em</p>
+        <p>If I'm surfing to <code>.issues</code> with bash, I'd like to see a text-only rendering of the contents of the issue when I type <code>ls</code>.</p>
+        <p>I'm thinking I could achieve this by providing <code>.issues/bin/ls</code> which is aware of relative paths and changes the output accordingly.  In this way, <code>ls</code> will appear to behave the same as the stock <code>ls</code> if the current directory needs no unique issue-tracking "overrides".  To do this, I'd need some way for the shell session to search the <code>.issues/bin</code> path first.</p>
       </article>
 
 <!--      <article class="post">-->
