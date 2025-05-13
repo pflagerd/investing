@@ -38,6 +38,10 @@
         <p>I then adjusted <code>styles.css</code> to make the <code>code</code> style be 1.16em instead of 1.20em, since it looks better in the paragraph immediately above this one. The original size made S<code>.issues/10/images/Screenshot_20250512_101928.png</code> look too big relative to body text.  But after fiddling with that and remeasuring, I put it back to 1.20em</p>
         <p>If I'm surfing to <code>.issues</code> with bash, I'd like to see a text-only rendering of the contents of the issue when I type <code>ls</code>.</p>
         <p>I'm thinking I could achieve this by providing <code>.issues/bin/ls</code> which is aware of relative paths and changes the output accordingly.  In this way, <code>ls</code> will appear to behave the same as the stock <code>ls</code> if the current directory needs no unique issue-tracking "overrides".  To do this, I'd need some way for the shell session to search the <code>.issues/bin</code> path first.</p>
+        <p>I created a bash script <code>.issues/bin/ls</code> which displays issues.  It is very very incomplete and only works when passed NO arguments.</p>
+        <p>To use <code>.issues/bin/ls</code>, you must explicitly add the absolute pathname of <code>.issues/bin</code> to the beginning of <code>PATH</code> and then do <code>hash -r</code>.</p>
+        <p>It looks like this:</p>
+        <img style="width: 1000px;" src="images/Screenshot_20250512_165503.png" alt="image of ls command displaying issue number and title">
       </article>
 
 <!--      <article class="post">-->
