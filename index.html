@@ -27,11 +27,55 @@
 
   <main class="container">
     <section class="posts">
-      <article class="post">
+      <article id="article-1" class="post">
         <h3>Critical Analysis of <a href="https://www.youtube.com/watch?v=qtxkZcpnxcA" target="_blank">"Government Report Reveals A LOT of People Are About to Lose Their Jobs"</a></h3>
         <p class="meta">This video is from <a href="">Eurodollar University</a>, a guy named Jeff Snyder who I find sometimes compelling and always interesting.</p>
         <p class="meta">May 12, 2025 by Daniel</p>
-        <p></p>
+        <p>If I'm going to to a critical analysis of this video, I will probably need to</p>
+        <ul style="margin-left: 2em;">
+          <li>1) be able to navigate it with a video viewer which allows me to easily move forward and backward in little chunks</li>
+          <li>2) find start and end times</li>
+          <li>3) be able to navigate quickly to those start and end times</li>
+          <li>4) refine those times with numeric values</li>
+          <li>5) extract a transcript from the video</li>
+          <li>6) be able to navigate to any point in the video by clicking on a word or phrase from the transcript</li>
+          <li>7) unambiguously represent the content of the transcript in cases where the language is ambiguous.</li></ul>
+        <p>1-4 sound like requirements for a new or existing tool. Perhaps I should do a search for such a tool.</p>
+        <p>5-7 sound like requirements for another tool, or perhaps requirements of new new tool. Perhaps I should do a search for such a tool.</p>
+        <form style="margin-left: 2em;" action="">
+          <input type="checkbox" id="search-1-4" name="vehicle1" value="Bike">
+          <label for="search-1-4">Search for an existing tool for requirements 1-4</label><br>
+          <input type="checkbox" id="search-5-7" name="vehicle2" value="Car">
+          <label for="search-5-7">Search for an existing tool for requirements 5-7</label><br>
+          <!--input type="submit" value="Submit"-->
+        </form>
+        <form style="margin-left: 2em;" action="">
+          <input type="checkbox" id="design-1-4" name="vehicle1" value="Bike">
+          <label for="design-1-4">Design a new tool for requirements 1-4</label><br>
+          <input type="checkbox" id="design-5-7" name="vehicle2" value="Car">
+          <label for="design-5-7">Design a new tool for requirements 5-7</label><br>
+          <!--input type="submit" value="Submit"-->
+        </form>
+        <script>
+          const article = document.getElementById("article-1");
+          console.log("Article parsed.");
+          const search_1_4 = document.getElementById("search-1-4");
+          const search_5_7 = document.getElementById("search-5-7");
+          const design_1_4 = document.getElementById("design-1-4");
+          const design_5_7 = document.getElementById("design-5-7");
+          search_1_4.onclick = function() {
+            console.log("search_1_4.onclick() was executed")
+          }
+          search_5_7.onclick = function() {
+            console.log("search_5_7.onclick() was executed")
+          }
+          design_1_4.onclick = function() {
+            console.log("design_1_4.onclick() was executed")
+          }
+          design_5_7.onclick = function() {
+            console.log("design_5_7.onclick() was executed")
+          }
+        </script>
       </article>
 
 <!--      <article class="post">-->
