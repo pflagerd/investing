@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GDX Stock Chart</title>
+    <!-- Chart.js library for creating the stock chart -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        /* Reset browser defaults for consistent cross-browser appearance */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /* Include padding/border in element dimensions */
+        }
+
+        /* Full-screen dark theme optimized for financial data viewing */
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; /* System fonts for native feel */
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%); /* Dark gradient for professional trading look */
+            color: #ffffff; /* White text for contrast against dark background */
+            min-height: 100vh; /* Ensure full viewport height coverage */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+
+        /* Main container - minimal padding to maximize chart space */
+        .container {
+            max-width: 100%; /* Full width utilization */
+            margin: 0 auto; /* Center horizontally */
+            padding: 20px; /* Minimal padding for breathing room */
+            height: 100vh; /* Full viewport height */
+            display: flex; /* Flexbox for layout control */
+            flex-direction: column; /* Stack elements vertically */
+        }
+
+        /* Header section - compact design to maximize chart space */
+        .header {
+            text-align: center; /* Center-align header content */
+            margin-bottom: 20px; /* Small margin to maximize chart space */
+            flex-shrink: 0; /* Prevent header from shrinking */
+        }
+
+        /* Main title styling - prominent but not overwhelming */
+        .header h1 {
+            font-size: 2.5rem; /* Large size for prominence */
+            font-weight: 300; /* Light weight for modern appearance */
+            color: #ffd700; /* Gold color to match GDX (gold miners ETF) theme */
+            margin-bottom: 8px; /* Tight spacing */
+            text-shadow: 0 2px 4px rgba(255, 215, 0, 0.3); /* Subtle glow effect */
+        }
+
+        /* Subtitle with ETF description */
+        .header .subtitle {
+            font-size: 1.1rem; /* Slightly larger than body text */
+            color: #b0b0b0; /* Muted color for hierarchy */
+            margin-bottom: 5px; /* Minimal spacing */
+        }
+
+        /* Live price display - prominent current price */
+        .live-price {
+            font-size: 1.8rem; /* Large for importance */
+            font-weight: bold; /* Bold for emphasis */
+            color: #00ff88; /* Green for financial positive (traditional trading color) */
+            margin-bottom: 10px; /* Space before chart */
+        }
+
+        /* Price change indicator */
+        .price-change {
+            font-size: 1rem; /* Standard size */
+            font-weight: 500; /* Medium weight */
+            padding: 4px 12px; /* Padding for pill shape */
+            border-radius: 20px; /* Rounded pill appearance */
+            display: inline-block; /* Allow padding and margins */
+            margin-bottom: 15px; /* Space before chart */
+        }
+
+        /* Positive price change styling - green for gains */
+        .price-change.positive {
+            background: rgba(0, 255, 136, 0.2); /* Semi-transparent green background */
+            color: #00ff88; /* Green text */
+            border: 1px solid rgba(0, 255, 136, 0.3); /* Green border */
+        }
+
+        /* Negative price change styling - red for losses */
+        .price-change.negative {
+            background: rgba(255, 69, 69, 0.2); /* Semi-transparent red background */
+            color: #ff4545; /* Red text */
+            border: 1px solid rgba(255, 69, 69, 0.3); /* Red border */
+        }
+
+        /* Chart container - takes up most of the screen real estate */
+        .chart-container {
+            flex: 1; /* Take up all remaining vertical space */
+            position: relative; /* For Chart.js positioning requirements */
+            background: rgba(255, 255, 255, 0.05); /* Very subtle background */
+            border-radius: 12px; /* Rounded corners for modern look */
+            padding: 20px; /* Internal padding for chart breathing room */
+            backdrop-filter: blur(10px); /* Glassmorphism effect */
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border definition */
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); /* Depth shadow */
+        }
+
+        /* Chart canvas styling */
+        .chart-canvas {
+            width: 100% !important; /* Force full width */
+            height: 100% !important; /* Force full height */
+        }
+
+        /* Loading state styling - centered spinner */
+        .loading {
+            display: flex; /* Flexbox for centering */
+            align-items: center; /* Vertical centering */
+            justify-content: center; /* Horizontal centering */
+            height: 200px; /* Fixed height for loading state */
+            color: #b0b0b0; /* Muted color */
+            font-size: 1.1rem; /* Readable size */
+        }
+
+        /* Animated loading spinner */
+        .spinner {
+            width: 24px; /* Slightly larger than dashboard version */
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3); /* Light border */
+            border-top: 3px solid #ffd700; /* Gold spinning edge to match theme */
+            border-radius: 50%; /* Perfect circle */
+            animation: spin 1s linear infinite; /* Continuous rotation */
+            margin-right: 12px; /* Space before loading text */
+        }
+
+        /* Keyframe animation for spinner rotation */
+        @keyframes spin {
+            0% { transform: rotate(0deg); } /* Start position */
+            100% { transform: rotate(360deg); } /* End position - full rotation */
+        }
+
+        /* Error message styling - red theme for problems */
+        .error {
+            background: rgba(255, 69, 69, 0.2); /* Semi-transparent red background */
+            color: #ff4545; /* Red text */
+            padding: 15px; /* Generous padding for readability */
+            border-radius: 8px; /* Rounded corners */
+            border: 1px solid rgba(255, 69, 69, 0.3); /* Red border */
+            text-align: center; /* Center error text */
+            margin: 20px 0; /* Vertical spacing */
+        }
+
+        /* Status bar at bottom - shows last update time and auto-refresh info */
+        .status-bar {
+            display: flex; /* Flexbox for layout */
+            justify-content: space-between; /* Space items apart */
+            align-items: center; /* Vertical alignment */
+            margin-top: 15px; /* Space above status bar */
+            font-size: 0.9rem; /* Smaller text for status info */
+            color: #888; /* Muted color for secondary info */
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+
+        /* Last updated timestamp */
+        .last-updated {
+            color: #b0b0b0; /* Muted color */
+        }
+
+        /* Auto-refresh indicator */
+        .auto-refresh {
+            color: #888; /* Muted color */
+        }
+
+        /* Pulsing animation for live indicator */
+        .live-indicator {
+            display: inline-block; /* Allow transforms */
+            width: 8px; /* Small dot size */
+            height: 8px;
+            background: #00ff88; /* Green for live */
+            border-radius: 50%; /* Perfect circle */
+            margin-right: 6px; /* Space before text */
+            animation: pulse 2s infinite; /* Pulsing animation to show activity */
+        }
+
+        /* Keyframe animation for live indicator pulse */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); } /* Normal state */
+            50% { opacity: 0.5; transform: scale(1.2); } /* Pulsed state */
+        }
+
+        /* Responsive design for mobile devices */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem; /* Smaller title on mobile */
+            }
+            
+            .live-price {
+                font-size: 1.5rem; /* Smaller price on mobile */
+            }
+            
+            .container {
+                padding: 15px; /* Less padding on mobile */
+            }
+            
+            .chart-container {
+                padding: 15px; /* Less padding in chart container */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main container for the entire application -->
+    <div class="container">
+        <!-- Header section with title and current price info -->
+        <div class="header">
+            <!-- Main title with gold theme for GDX -->
+            <h1>📈 GDX Stock Chart</h1>
+            <!-- Subtitle explaining what GDX is -->
+            <div class="subtitle">VanEck Vectors Gold Miners ETF</div>
+            <!-- Live price display - updated with each data fetch -->
+            <div class="live-price" id="currentPrice">Loading...</div>
+            <!-- Price change indicator with color coding -->
+            <div class="price-change" id="priceChange">--</div>
+        </div>
+
+        <!-- Main chart container - takes up most of screen space -->
+        <div class="chart-container">
+            <!-- Loading state - shown while fetching initial data -->
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                Fetching GDX data...
+            </div>
+            <!-- Chart canvas - hidden until data loads -->
+            <canvas id="stockChart" class="chart-canvas" style="display: none;"></canvas>
+            <!-- Error display - shown if data fetch fails -->
+            <div id="error" class="error" style="display: none;"></div>
+        </div>
+
+        <!-- Status bar with update info and live indicator -->
+        <div class="status-bar">
+            <!-- Last update timestamp -->
+            <div class="last-updated" id="lastUpdated">--</div>
+            <!-- Auto-refresh status with pulsing live indicator -->
+            <div class="auto-refresh">
+                <span class="live-indicator"></span>
+                Auto-refresh: 30s
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chart.js instance for cleanup and updates
+        let stockChart = null;
+        
+        // Cache for storing historical data to reduce API calls
+        const CACHE_KEY = 'gdx_stock_data'; // localStorage key for caching
+        const CACHE_TIMESTAMP_KEY = 'gdx_cache_timestamp'; // Key for cache timestamp
+        const CACHE_EXPIRY_MINUTES = 5; // Cache expires after 5 minutes (fresher than FRED dashboard)
+        
+        // API configuration using Yahoo Finance via CORS proxy
+        const YAHOO_FINANCE_URL = 'https://query1.finance.yahoo.com/v8/finance/chart/GDX'; // Yahoo Finance API endpoint
+        const CORS_PROXY = 'https://api.allorigins.win/raw?url='; // Free CORS proxy service (same as FRED dashboard)
+        const SYMBOL = 'GDX'; // Stock symbol for VanEck Vectors Gold Miners ETF
+        
+        // Update intervals for different data types
+        const INTRADAY_UPDATE_INTERVAL = 30000; // 30 seconds for intraday updates (active market hours)
+        const DAILY_UPDATE_INTERVAL = 300000; // 5 minutes for daily data (less frequent updates needed)
+
+        // Save fetched data to localStorage for offline resilience and reduced API calls
+        function saveToCache(data) {
+            try {
+                // Store both the data and when it was cached
+                localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+                localStorage.setItem(CACHE_TIMESTAMP_KEY, Date.now().toString());
+                console.log('Data cached successfully'); // Debug logging
+            } catch (error) {
+                // localStorage can fail in private browsing or when quota exceeded
+                console.warn('Failed to cache data:', error);
+            }
+        }
+
+        // Retrieve data from localStorage if available and not expired
+        function loadFromCache() {
+            try {
+                const data = localStorage.getItem(CACHE_KEY);
+                const timestamp = localStorage.getItem(CACHE_TIMESTAMP_KEY);
+                
+                // Check if we have both data and timestamp
+                if (!data || !timestamp) {
+                    return null;
+                }
+
+                // Check if cached data has expired
+                const cacheAge = Date.now() - parseInt(timestamp);
+                const cacheExpiryMs = CACHE_EXPIRY_MINUTES * 60 * 1000;
+                
+                if (cacheAge > cacheExpiryMs) {
+                    console.log('Cache expired, will fetch fresh data');
+                    return null;
+                }
+
+                console.log('Using cached data');
+                return JSON.parse(data);
+            } catch (error) {
+                console.warn('Failed to load cached data:', error);
+                return null;
+            }
+        }
+
+        // Fetch stock data from Yahoo Finance API via CORS proxy
+        async function fetchStockData() {
+            try {
+                // Build Yahoo Finance API URL for 1-day chart with 5-minute intervals
+                const yahooUrl = `${YAHOO_FINANCE_URL}?interval=5m&range=1d&includePrePost=false`;
+                // Wrap with CORS proxy to bypass browser restrictions
+                const proxyUrl = `${CORS_PROXY}${encodeURIComponent(yahooUrl)}`;
+                
+                console.log('Fetching GDX data from Yahoo Finance via CORS proxy...'); // Debug logging
+                
+                // Make HTTP request through CORS proxy
+                const response = await fetch(proxyUrl);
+                
+                // Check for HTTP errors
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                // Parse JSON response
+                const data = await response.json();
+                
+                // Check for API errors
+                if (data.chart?.error) {
+                    throw new Error(data.chart.error.description || 'Yahoo Finance API error');
+                }
+                
+                // Extract chart data from Yahoo Finance response format
+                const chartData = data.chart?.result?.[0];
+                if (!chartData) {
+                    throw new Error('No chart data available from Yahoo Finance');
+                }
+                
+                // Get timestamps and price data arrays
+                const timestamps = chartData.timestamp; // Unix timestamps
+                const priceData = chartData.indicators?.quote?.[0]; // OHLCV data
+                
+                if (!timestamps || !priceData) {
+                    throw new Error('Invalid data format from Yahoo Finance');
+                }
+                
+                // Convert Yahoo Finance format to our internal format
+                const processedData = timestamps
+                    .map((timestamp, index) => ({
+                        timestamp: new Date(timestamp * 1000).toISOString(), // Convert Unix to ISO string
+                        price: priceData.close[index], // Closing price for each 5-minute interval
+                        volume: priceData.volume[index], // Trading volume
+                        high: priceData.high[index], // Period high
+                        low: priceData.low[index], // Period low
+                        open: priceData.open[index] // Opening price
+                    }))
+                    .filter(item => item.price !== null && !isNaN(item.price)) // Remove null/invalid prices
+                    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)); // Sort chronologically
+                
+                // Validate we have usable data
+                if (processedData.length === 0) {
+                    throw new Error('No valid price data available');
+                }
+                
+                // Save successful fetch to cache
+                saveToCache(processedData);
+                
+                console.log(`Loaded ${processedData.length} data points for GDX`); // Debug logging
+                
+                return processedData;
+                
+            } catch (error) {
+                console.error('Error fetching stock data:', error);
+                
+                // Try to fall back to cached data
+                const cachedData = loadFromCache();
+                if (cachedData) {
+                    console.log('Using cached data due to API error');
+                    return cachedData;
+                }
+                
+                // No cache available - re-throw the error
+                throw error;
+            }
+        }
+
+        // Create or update the stock chart with new data
+        function createChart(data) {
+            // Get canvas context for Chart.js
+            const ctx = document.getElementById('stockChart').getContext('2d');
+            
+            // Destroy existing chart to prevent memory leaks
+            if (stockChart) {
+                stockChart.destroy();
+            }
+
+            // Prepare data for Chart.js format
+            const labels = data.map(item => {
+                // Format timestamps for chart labels (show time for intraday)
+                const date = new Date(item.timestamp);
+                return date.toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    hour12: false // 24-hour format for trading
+                });
+            });
+            
+            const prices = data.map(item => item.price); // Extract price values
+            
+            // Calculate price gradient colors (green if trending up, red if down)
+            const currentPrice = prices[prices.length - 1];
+            const startPrice = prices[0];
+            const isPositive = currentPrice >= startPrice;
+            
+            // Create Chart.js instance with financial chart styling
+            stockChart = new Chart(ctx, {
+                type: 'line', // Line chart for price movement
+                data: {
+                    labels: labels, // Time labels on X-axis
+                    datasets: [{
+                        label: 'GDX Price', // Dataset label for tooltips
+                        data: prices, // Price data for Y-axis
+                        // Dynamic coloring based on overall trend
+                        borderColor: isPositive ? '#00ff88' : '#ff4545', // Green for gains, red for losses
+                        backgroundColor: isPositive ? 
+                            'rgba(0, 255, 136, 0.1)' : 'rgba(255, 69, 69, 0.1)', // Subtle fill color
+                        borderWidth: 2, // Line thickness
+                        fill: true, // Fill area under line
+                        tension: 0.2, // Slight curve smoothing
+                        pointRadius: 0, // Hide individual points for cleaner look
+                        pointHoverRadius: 6, // Show points on hover
+                        pointBackgroundColor: isPositive ? '#00ff88' : '#ff4545', // Point color matches line
+                    }]
+                },
+                options: {
+                    responsive: true, // Resize with container
+                    maintainAspectRatio: false, // Allow height override
+                    interaction: {
+                        intersect: false, // Show tooltip when near line, not just on points
+                        mode: 'index' // Show data for all datasets at X position
+                    },
+                    plugins: {
+                        legend: {
+                            display: false // Hide legend since title shows what this is
+                        },
+                        tooltip: {
+                            // Custom tooltip styling for financial data
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)', // Dark background
+                            titleColor: '#ffffff', // White title text
+                            bodyColor: '#ffffff', // White body text
+                            borderColor: isPositive ? '#00ff88' : '#ff4545', // Border matches trend
+                            borderWidth: 1,
+                            displayColors: false, // Hide color squares in tooltip
+                            callbacks: {
+                                // Custom tooltip content
+                                title: function(context) {
+                                    // Show full date/time in tooltip
+                                    const dataIndex = context[0].dataIndex;
+                                    return new Date(data[dataIndex].timestamp).toLocaleString();
+                                },
+                                label: function(context) {
+                                    // Format price with currency symbol
+                                    return `Price: $${context.parsed.y.toFixed(2)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            // X-axis (time) styling
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)', // Subtle grid lines
+                                drawBorder: false // Hide axis border
+                            },
+                            ticks: {
+                                color: '#b0b0b0', // Muted text color
+                                maxTicksLimit: 8 // Limit number of time labels
+                            }
+                        },
+                        y: {
+                            // Y-axis (price) styling
+                            position: 'right', // Price scale on right (financial convention)
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)', // Subtle grid lines
+                                drawBorder: false // Hide axis border
+                            },
+                            ticks: {
+                                color: '#b0b0b0', // Muted text color
+                                callback: function(value) {
+                                    // Format Y-axis labels as currency
+                                    return '$' + value.toFixed(2);
+                                }
+                            }
+                        }
+                    },
+                    elements: {
+                        point: {
+                            hoverBorderWidth: 2 // Thicker border on hover
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update the current price display in the header
+        function updatePriceDisplay(data) {
+            // Get the most recent price data
+            const latestData = data[data.length - 1];
+            const previousData = data[data.length - 2];
+            
+            // Calculate price change from previous period
+            const currentPrice = latestData.price;
+            const previousPrice = previousData ? previousData.price : currentPrice;
+            const priceChange = currentPrice - previousPrice;
+            const percentChange = previousPrice ? (priceChange / previousPrice) * 100 : 0;
+            
+            // Update current price display
+            document.getElementById('currentPrice').textContent = `$${currentPrice.toFixed(2)}`;
+            
+            // Update price change display with appropriate styling
+            const priceChangeEl = document.getElementById('priceChange');
+            const changeText = `${priceChange >= 0 ? '+' : ''}${priceChange.toFixed(2)} (${percentChange >= 0 ? '+' : ''}${percentChange.toFixed(2)}%)`;
+            priceChangeEl.textContent = changeText;
+            
+            // Apply appropriate CSS class for color coding
+            priceChangeEl.className = `price-change ${priceChange >= 0 ? 'positive' : 'negative'}`;
+        }
+
+        // Main function to load and display stock data
+        async function loadStockData() {
+            // Get DOM elements for state management
+            const loadingEl = document.getElementById('loading');
+            const chartEl = document.getElementById('stockChart');
+            const errorEl = document.getElementById('error');
+            
+            try {
+                // Show loading state
+                loadingEl.style.display = 'flex';
+                chartEl.style.display = 'none';
+                errorEl.style.display = 'none';
+                
+                // Fetch data from API or cache
+                const data = await fetchStockData();
+                
+                // Validate we have usable data
+                if (!data || data.length === 0) {
+                    throw new Error('No stock data available');
+                }
+                
+                // Update price display in header
+                updatePriceDisplay(data);
+                
+                // Create/update the chart
+                createChart(data);
+                
+                // Update last updated timestamp
+                document.getElementById('lastUpdated').textContent = 
+                    `Last updated: ${new Date().toLocaleTimeString()}`;
+                
+                // Show chart, hide loading
+                loadingEl.style.display = 'none';
+                chartEl.style.display = 'block';
+                
+                console.log('Stock data loaded successfully'); // Debug logging
+                
+            } catch (error) {
+                // Handle errors gracefully
+                console.error('Error loading stock data:', error);
+                
+                // Show error message to user
+                loadingEl.style.display = 'none';
+                chartEl.style.display = 'none';
+                errorEl.style.display = 'block';
+                errorEl.textContent = `Failed to load GDX data: ${error.message}`;
+            }
+        }
+
+        // Initialize the application when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Initializing GDX Stock Chart...'); // Debug logging
+            
+            // Load initial data
+            loadStockData();
+            
+            // Set up auto-refresh every 30 seconds for live updates
+            setInterval(loadStockData, INTRADAY_UPDATE_INTERVAL);
+            
+            console.log('Auto-refresh enabled (30 second intervals)'); // Debug logging
+        });
+    </script>
+</body>
+</html>
