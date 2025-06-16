@@ -64,13 +64,104 @@
       <article class="post">
         <h3>Start to understand SEC Edgar and gather data from it.<a href="#"></a></h3>
         <p class="meta">Posted on June 12, 2025 13:36 (UTC-7) by Daniel</p>
+        <p><label"><input type="checkbox"> </label>Turn on Google Analytics on this and other published pages.</p>
+        <p>Gerry mentioned the HOPE economic recession indicator which let to this <a href="https://recessiondashboard.com/main-indicators/hope/" target="_blank">https://recessiondashboard.com/</a>.</p>
         <p>Still working on the various AI summaries from the last blog post, I'm also starting to understand <a href="https://www.sec.gov/search-filings" target="_blank">SEC Edgar filings</a>.</p>
-        <p>First goal in that is to collect/download past 13F-HR forms for Berkshire Hathaway. This should include 13F-HR/A forms.</p>
-        <p>Next goal is to detect changes in amounts of each security over time. Good enough here to just print a textual list of changes in total for each security for each 13F-HR/A, listed by date.</p>
+        <p><label style="margin-left: 1rem;"><input type="checkbox"> </label>Extract audio from and do fact-check on "Accounting Gimmick" <a href="https://youtu.be/OT7KO62xtwc" target="_blank">Watch "Trumps New Fed Chair Will Shock The World" on YouTube</a></p>
+        <p><label style="margin-left: 1rem;"><input type="checkbox"> </label>Extract audio from and do summary of <a href="https://youtu.be/Wh3LyXWEcOk" target="_blank">Everything You’ve Been Told About the Dollar Is Wrong</a></p>
+        <p><label style="margin-left: 1rem;"><input type="checkbox"> </label>Remember this one's points.  I think they are valid. Re-write it in non-hyperbolic terms. <a href="https://youtu.be/dc1egz5Om90" target="_blank">Almost all the economics taught, and which informs our politics, is completely rubbish</a></p>
+        <p><label style="margin-left: 1rem;"><input type="checkbox"> </label>Also, will take one or more of the summaries and convert them to voice using <a href="https://elevenlabs.io/" target="_blank">elevenlabs.io</a></p>
+        <p><label style="margin-left: 1rem;"><input type="checkbox"> </label>And will take one or more summaries and animate them with <a href="https://www.synthesia.io/" target="_blank">https://www.synthesia.io/</a> and/or <a href="https://lps.colossyan.com/" target="_blank">https://lps.colossyan.com/</a></p>
+        <p><label style="margin-left: 1rem;"><input type="checkbox"> </label>First goal in that is to collect/download past 13F-HR forms for Berkshire Hathaway. This should include 13F-HR/A forms.</p>
+        <p style="margin-left: 1rem;"><label><input type="checkbox"> </label>Write direct-access javascript or find javascript library.</p>
+        <p style="margin-left: 2rem;"><label><input type="checkbox"> </label>Created project <a href="https://github.com/pflagerd/sec-edgar-brk-13f" target="_blank">https://github.com/pflagerd/sec-edgar-brk-13f</a>.</p>
+        <p style="margin-left: 3rem;"><label><input type="checkbox"> </label>This project contains a directory with an experiment using <a href="https://github.com/oscjac/edgar-api" target="_blank">https://github.com/oscjac/edgar-api</a>. It may be found at <a href="https://github.com/pflagerd/sec-edgar-brk-13f/tree/910e70e25b37e58e8ce6959f493b006d0ca604be/edgar-api" target="_blank">https://github.com/pflagerd/sec-edgar-brk-13f/tree/910e70e25b37e58e8ce6959f493b006d0ca604be/edgar-api</a>. </p>
+        <p style="margin-left: 3rem;"><a href="https://github.com/oscjac/edgar-api" target="_blank">https://github.com/oscjac/edgar-api</a> did not work as advertised.  It took some fiddling and ClaudAI-ing to get it to do anything.</p>
+        <p style="margin-left: 3rem;">Even after having got it doing something, it was very difficult and required more fiddling to figure out what it was retrieving and what the json structures were.</p>
+        <p style="margin-left: 3rem;">Brings up an interesting problem: How do you judge the quality of a github.com (or other open source) product?  Makes me wish there were a checklist or something.</p>
+        <p style="margin-left: 3rem;">Even the thought of searching for something along these lines makes me tired.  Web searching is so hit-and-miss and there's so much junk out there, experience says that any such searches will take a lot of time to find anything useful.  One useful side-effect of a fruitless search is that you find out what <i>is</i> out there, and what <i>isn't</i>.</p>
+        <p style="margin-left: 3rem;"><label><input type="checkbox"> </label>Do a search for articles about Edgar APIs.</p>
+        <p style="margin-left: 3rem;"><label><input type="checkbox"> </label>Search for and vet existing edgar apis.</p>
+        <style>
+        table {
+        border-collapse: collapse;
+        width: 60%;
+        margin: auto;
+        }
+        th, td {
+        text-align: left;
+        padding: 12px;
+        border: 1px solid #ddd;
+        }
+        tr:nth-child(even) {
+        background-color: #f2f2f2;
+        }
+        th {
+        background-color: #4CAF50;
+        color: white;
+        }
+        </style>
+        <table>
+          <colgroup>
+            <col style="width: 30%;">
+            <col style="width: 40%;">
+            <col style="width: 20%;">
+          </colgroup>
+          <tr>
+            <th>Package</th>
+            <th>Description</th>
+            <th>Stats</th>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/janlukasschroeder/sec-api-python" target="_blank">https://github.com/janlukasschroeder/sec-api-python</a></td>
+            <td>SEC API - Access SEC and EDGAR Data with Python (2M downloads). Associated with sec-api.io. Freemium-ish. Software may be usable independent of sec-api.io.</td>
+            <td> 240 stars, 9 watching, 32 forks</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/jadchaar/sec-edgar-api" target="_blank">https://github.com/jadchaar/sec-edgar-api</a></td>
+            <td>a lightweight, unofficial Python API wrapper for the SEC EDGAR REST API.</td>
+            <td> 98 stars, 3 watching, 17 forks</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/topics/edgar-api?o=asc&s=forks" target="_blank">https://github.com/topics/edgar-api</a></td>
+            <td>A list of edgar-api-related projects.</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/stefanoamorelli/sec-edgar-mcp" target="_blank">https://github.com/stefanoamorelli/sec-edgar-mcp</a></td>
+            <td>SEC EDGAR MCP is an open-source MCP server that connects AI models to the rich dataset of SEC EDGAR filings</td>\
+            <td> 42 stars, 1 watching, 17 forks</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/sec-edgar/sec-edgar" target="_blank">https://github.com/sec-edgar/sec-edgar</a></td>
+            <td>Getting filings of various companies at once is really a pain, but SEC-Edgar does that for you. </td>
+            <td> 1.2k stars, 37 watching, 315 forks</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/topics/sec-edgar" target="_blank">https://github.com/topics/sec-edgar</a></td>
+            <td>A list of sec-edgar-related projects.</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/dgunning/edgartools" target="_blank">https://github.com/dgunning/edgartools</a></td>
+            <td>Python Library for SEC EDGAR Data Extraction and Analysis</td>
+            <td>993 stars, 26 watching, 182 forks</td>
+          </tr>
+          <!--tr>
+            <td><a href="" target="_blank"></a></td>
+            <td>Row 4 Data B</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><a href="" target="_blank"></a></td>
+            <td>Row 4 Data B</td>
+            <td></td>
+          </tr-->
+        </table>
+
+        <p><label style="margin-left: 1rem;"><input type="checkbox"> </label>Next goal is to detect changes in amounts of each security over time. Good enough here to just print a textual list of changes in total for each security for each 13F-HR/A, listed by date.</p>
       </article>
 
       <article class="post">
-        <h3>Proof-read the <a href="https://github.com/pflagerd/youtube-to-text/blob/f700e788d65da93d811108cded0e016b964f3d1d/qtxkZcpnxcA.mp3.txt">youtube-to-text/qtxkZcpnxcA.mp3.txt</a> test document</h3>
+        <h3>Proof-read the <a href="https://github.com/pflagerd/youtube-to-text/blob/f700e788d65da93d811108cded0e016b964f3d1d/qtxkZcpnxcA.mp3.txt" target="_blank">youtube-to-text/qtxkZcpnxcA.mp3.txt</a> test document</h3>
         <p class="meta">Posted on June 9, 2025 11:09 (UTC-7) by Daniel</p>
         <p>Extract data and AI summaries from <a href="https://github.com/pflagerd/youtube-to-text/blob/f700e788d65da93d811108cded0e016b964f3d1d/qtxkZcpnxcA.mp3.txt" target="_blank">https://github.com/pflagerd/youtube-to-text/qtxkZcpnxcA.mp3.txt</a></p>
         <p>I finished the proof-reading last week.</p>
